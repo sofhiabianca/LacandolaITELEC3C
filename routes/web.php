@@ -36,4 +36,8 @@ Route::middleware([
 
 
 //Category routes
-Route::get('/all/category',  [CategoryController::class, 'index'])->name('AllCat');
+Route::get('add',  [CategoryController::class, 'index'])->name('AllCat');
+Route::post('/all/category', [CategoryController::class, 'AddCat'])->name('add.category');
+Route::get('/category/edit/{id}', [CategoryController::class, 'Edit']);
+Route::post('/category/update/{id}', [CategoryController::class, 'Update'])->name('update.category');
+Route::get('/category/delete/{id}', [CategoryController::class, 'Delete']);
