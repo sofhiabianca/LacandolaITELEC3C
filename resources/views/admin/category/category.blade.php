@@ -24,8 +24,8 @@
                             <thead>
                                 <tr>
                                 <th scope="col">ID</th>
-                                <th scope="col">Category Name</th>
                                 <th scope="col">User ID</th>
+                                <th scope="col">Category Name</th>
                                 <th scope="col">Created At</th>
                                 <th scope="col">Action</th>
                                 {{-- <th scope="col" colspan="2">Actions</th> --}}
@@ -100,8 +100,9 @@
                 <thead>
                     <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">User ID</th>
                     <th scope="col">Category Name</th>
+                    <th scope="col">User ID</th>
+                    
 
                     <th scope="col">Deleted At</th>
                     <th scope="col">Action</th>
@@ -115,8 +116,9 @@
                     <tr>
                         {{-- <th scope="row">{{$categories->firstItem()+$loop->index}}</th>  --}}
                         <th scope="row">{{$i++}}</th> 
-                        <td>{{ $trash->user->name }}</td>
                         <td>{{ $trash->category_name }}</td>
+                        <td>{{ $trash->user->name }}</td>
+                        
                         
                         <td>{{ $trash->deleted_at->diffForHumans() }}</td>
 
