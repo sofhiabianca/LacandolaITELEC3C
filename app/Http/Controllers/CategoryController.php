@@ -3,50 +3,71 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 
-use Illuminate\Http\Request;
-
 class CategoryController extends Controller
 {
-    public function index(){
+    public function index() {
         $categories = Category::latest()->paginate('5');
-        return view('admin.category.category', compact('categories'));
+        $trashCat = Category::onlyTrashed()->latest()->paginate('5');
+        return view('admin.category.category', compact('categories', 'trashCat'));
     }
 
-    public function AddCat(Request $request){
+    public function AddCat(Request $request) {
+
         $validated = $request->validate([
-            'category_name' => 'required|unique:categories|max:255',
+            'category_name' => 'required|max:255',
         ]);
 
         Category::create([
-            'category_name'=> $request->category_name,
+
+            'category_name' => $request->category_name,
             'user_id' => Auth::user()->id,
             'created_at' => Carbon::now()
         ]);
 
-        return Redirect()->back()->with('success', 'Category Inserted Successfully');
+
+        return redirect()->back()->with('success','Category Inserted Successfully');
     }
 
-    public function Edit($id){
-        $categories = Category::find($id);
-        return view('admin.category.edit', compact('categories'));
-    }
+    
+public function Edit($id){
 
-    public function Update(Request $request, $id){
-        $update = Category::find($id)->update([
-            'category_name' => $request->category_name,
-            'user_id' => Auth::user()->id
-        ]);
+    $categories = Category::find($id);
+    return view('admin.category.edit', compact('categories'));
 
-        return Redirect()->route('AllCat')->with('success', 'Update Successfully');
-    }
+}
 
-    public function Delete($id){
-        $category = Category::find($id);
-        $category->delete();
+public function Update(Request $request, $id) {
 
-        return Redirect()->back();
-    }
+    $update = Category::find($id)->update([
+        'category_name'=> $request->category_name,
+        'user_id' => Auth::user()->id
+    ]);
+
+    return Redirect()->route('AllCat')->with('success', 'Updated Successfully');
+}
+
+
+public function RemoveCat($id){
+
+    $remove = Category::find($id)->delete();
+    return redirect()->back()->with('success','Category Removed Successfully');
+}
+
+public function RestoreCat($id){
+
+    $restore = Category::withTrashed()->find($id)->restore();
+    return redirect()->back()->with('success','Category Restored Successfully');
+}
+
+public function DeleteCat($id){
+
+    $delete = Category::onlyTrashed()->find($id)->forceDelete();
+    return redirect()->back()->with('success','Category Deleted Successfully');
+}
+
+
 }
